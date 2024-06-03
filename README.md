@@ -351,7 +351,7 @@ Sube la nueva versión al repositorio git, comprueba que la tarea de ejecuta y q
 
 Necesitaremos las credenciales del cluster GKE y una cuenta de servicio.
 
-Las credenciales del cluster, podemos incluirlas en el fichero: /var/lib/jenkins/.kube/config
+Las credenciales del cluster, podemos incluirlas en el fichero: /var/lib/jenkins/.kube/config de la máquina virtual con la instalación de Jenkins.
 
 La cuenta de de servicio se incluirá, en jenkins, mediante: Panel de control - Administrar Jenkins - Credentials - Global - Add Credential - Tipo: Secret file - Seleccionamos el fichero json con la cuenta de servicio y elegios un nombre en ID para las credenciales (por ejemplo, gcp_credentials).
 
