@@ -347,7 +347,7 @@ Sube la nueva versión al repositorio git, comprueba que la tarea de ejecuta y q
 
 ## Desplegando en Kubernetes:
 
-## GKE
+### GKE
 
 Necesitaremos las credenciales del cluster GKE y una cuenta de servicio.
 
