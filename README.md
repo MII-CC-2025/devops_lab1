@@ -345,11 +345,11 @@ pipeline {
 
 Sube la nueva versión al repositorio git, comprueba que la tarea de ejecuta y que los resultados son los esperados
 
-## Desplegando en Kubernetes: EKS
+## Desplegando en Kubernetes:
 
 ## GKE
 
-Necesitaremos las credenciales del cluster EKS y una una cuenta de servicio.
+Necesitaremos las credenciales del cluster GKE y una cuenta de servicio.
 
 Las credenciales del cluster, podemos incluirlas en el fichero: /var/lib/jenkins/.kube/config
 
