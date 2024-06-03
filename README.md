@@ -353,7 +353,7 @@ Necesitaremos las credenciales del cluster EKS y una una cuenta de servicio.
 
 Las credenciales del cluster, podemos incluirlas en el fichero: /var/lib/jenkins/.kube/config
 
-La cuenta de de servicio se incluirá, en jenkins, mediante: Panel de control - Administrar Jenkins - Credentials - Global - Add Credential - Tipo: Secret file - Seleccionamos el fichero json con la cuenta de servicio y elegios un nombre en ID para las credenciales.
+La cuenta de de servicio se incluirá, en jenkins, mediante: Panel de control - Administrar Jenkins - Credentials - Global - Add Credential - Tipo: Secret file - Seleccionamos el fichero json con la cuenta de servicio y elegios un nombre en ID para las credenciales (por ejemplo, gcp_credentials).
 
 Crea un nuevo proyecto, tipo Pipeline, con el siguiente contenido:
 
@@ -370,7 +370,7 @@ pipeline {
         stage("Clone Git Repository") {
             steps {
                 git(
-                    url: "https://github.com/jluisalvarez/devops_jenkins_lab",
+                    url: "https://github.com/MII-CC-2024/devops_jenkins_lab",
                     branch: "main",
                     changelog: true,
                     poll: true
