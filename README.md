@@ -304,7 +304,7 @@ pipeline {
             steps {
                 sh '''
                 echo "Building..."
-                docker build -t jluisalvarez/flask_hello:$TAG .
+                docker build -t jluisalvarez/flask_app:$TAG .
                 '''
             }
         }
@@ -319,7 +319,7 @@ pipeline {
                     sh '''
                         echo "Publishing..."
                         docker login -u="${USERNAME}" -p="${PASSWORD}"
-                        docker push jluisalvarez/flask_hello:$TAG
+                        docker push jluisalvarez/flask_app:$TAG
                     ''' 
                 
                 }
@@ -329,7 +329,7 @@ pipeline {
             steps {
                 sh '''
                 echo "Cleaning..."
-                docker rmi jluisalvarez/flask_hello:$TAG
+                docker rmi jluisalvarez/flask_app:$TAG
                 ''' 
                 
            }
