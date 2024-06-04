@@ -340,6 +340,8 @@ Ejecuta la tarea y comrpueba que los resultados son los esperados.
 
 ## Desplegando en Kubernetes
 
+Ahora desplagaremos a Kubernetes incluyendo el código de la Pipeline, en el fichero Jenkinsfile, del repositorio.
+
 ### GKE
 
 Necesitaremos las credenciales del cluster GKE y una cuenta de servicio.
@@ -348,7 +350,9 @@ Las credenciales del cluster, podemos incluirlas en el fichero: /var/lib/jenkins
 
 La cuenta de de servicio se incluirá, en jenkins, mediante: Panel de control - Administrar Jenkins - Credentials - Global - Add Credential - Tipo: Secret file - Seleccionamos el fichero json con la cuenta de servicio y elegios un nombre en ID para las credenciales (por ejemplo, gcp_credentials).
 
-Crea un nuevo proyecto, tipo Pipeline, con el siguiente contenido:
+Crea un nuevo proyecto, tipo Pipeline. En la configuración, en Pipeline, elegimos "Pipeline script from SCM" y configuramos la URL del repositorio.
+
+Incluye, en el repositorio, el fichero Jenkinsfile con el siguiente contenido:
 
 ```
 pipeline {
@@ -359,17 +363,7 @@ pipeline {
         TAG = sh (returnStdout: true, script: 'date "+%d%m%Y-%H%M%S"').trim()
     }
 
-    stages {
-        stage("Clone Git Repository") {
-            steps {
-                git(
-                    url: "https://github.com/MII-CC-2024/devops_jenkins_lab",
-                    branch: "main",
-                    changelog: true,
-                    poll: true
-                )
-            }
-        }        
+    stages {        
         stage('Build') {
             steps {
                 sh '''
