@@ -41,7 +41,7 @@ pipeline {
                 echo 'Deploying...'
                 withCredentials([file(credentialsId: 'gcp_credentials', variable: 'GC_KEY')]) {
                     withEnv(["KUBECONFIG=/var/lib/jenkins/.kube/config"]) {
-                      sh("gcloud auth activate-service-account --key-file=${GC_KEY}")
+                      sh("/home/usuario/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${GC_KEY}")
                       sh("envsubst < k8s/manifest.yaml | kubectl apply -f -")
                     }
                 }
