@@ -269,10 +269,9 @@ En el enlace Pipeline Syntax puedes acceder a un generador de código que te pue
 
 - Ejecuta la tarea y comrpueba el resultado. Navega por las diferentes opciones de la ejecución.
 
-## Reconfigura la Pipeline
+### Reconfigura la Pipeline
 
-Crea el fichero Jenkinsfile para contenerizar app y subir imagen a Docker Hub
-
+Cambia el script de la Pipeline para contenerizar app y subir imagen a Docker Hub, con el siguiente contenido:
 
 ```
 pipeline {
@@ -284,16 +283,7 @@ pipeline {
     }
 
     stages {
-        stage("Clone Git Repository") {
-            steps {
-                git(
-                    url: "https://github.com/MII-CC-2024/devops_jenkins_lab",
-                    branch: "main",
-                    changelog: true,
-                    poll: true
-                )
-            }
-        }
+
         stage('Build') {
             steps {
                 sh '''
@@ -336,6 +326,7 @@ pipeline {
     }
 }
 ```
+
 
 Ejecuta la tarea y comrpueba que los resultados son los esperados
 
