@@ -363,7 +363,7 @@ Ejecuta la tarea y comrpueba que los resultados son los esperados.
 
 
 ## Proyecto 4: Pipeline from SCM (y Jenkinsfile) con AWS
-Vamos a crear una pipeline que permita desplegar en EKS, auqnue en este caso, solo probaremos la conexión.
+Vamos a crear una pipeline que permita desplegar en EKS, aunque en este caso, solo probaremos la conexión.
 
 En la máquina donde esté instalado Jenkins, es necesario tener instalada las herramientas necesarias, en este caso: Docker, AWS CLI, kubectl.
 Además, debemos tener un cluster EKS.
@@ -518,3 +518,4 @@ pipeline {
 }
 ```
 
+NOTA: El comando envsubst permite sustituir en un fichero el valor de la variables de entorno ($VAR)
