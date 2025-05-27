@@ -2,60 +2,65 @@
 
 ## Requisitos
 
-Crea una máquina virtual e instala java y jankins en ella.
+Crea una máquina virtual e instala java y jenkins en ella.
 
 ### Instalar Java
 
 ```
-alvarez@jenkins:~$ java --version
+alvarez@jenkins:~$ javac --version
 
-Command 'java' not found, but can be installed with:
+Command 'javac' not found, but can be installed with:
 
-apt install openjdk-11-jre-headless  # version 11.0.20.1+1-0ubuntu1~20.04, or
-apt install default-jre              # version 2:1.11-72
-apt install openjdk-16-jre-headless  # version 16.0.1+9-1~20.04
-apt install openjdk-17-jre-headless  # version 17.0.8.1+1~us1-0ubuntu1~20.04
-apt install openjdk-8-jre-headless   # version 8u382-ga-1~20.04.1
-apt install openjdk-13-jre-headless  # version 13.0.7+5-0ubuntu1~20.04
+sudo apt install openjdk-17-jdk-headless  # version 17.0.14+7-1~24.04, or
+sudo apt install openjdk-21-jdk-headless  # version 21.0.6+7-1~24.04.1
+sudo apt install default-jdk              # version 2:1.17-75
+sudo apt install openjdk-11-jdk-headless  # version 11.0.26+4-1ubuntu1~24.04
+sudo apt install openjdk-8-jdk-headless   # version 8u442-b06~us1-0ubuntu1~24.04
+sudo apt install ecj                      # version 3.32.0+eclipse4.26-2
+sudo apt install openjdk-19-jdk-headless  # version 19.0.2+7-4
+sudo apt install openjdk-20-jdk-headless  # version 20.0.2+9-1
+sudo apt install openjdk-22-jdk-headless  # version 22~22ea-1
 
 Ask your administrator to install one of them.
 ```
 
 ```
-alvarez@jenkins:~$ sudo apt-get update
+alvarez@jenkins:~$ sudo apt update
 
 ...
 
-alvarez@jenkins:~$ sudo apt-get install -y openjdk-17-jre-headless
+alvarez@jenkins:~$ sudo apt install -y openjdk-21-jdk-headless
 
 ...
 
-alvarez@jenkins:~$ java --version
-openjdk 17.0.10 2024-01-16
-OpenJDK Runtime Environment (build 17.0.10+7-Ubuntu-120.04.1)
-OpenJDK 64-Bit Server VM (build 17.0.10+7-Ubuntu-120.04.1, mixed mode, sharing)
+alvarez@jenkins:~$ javac --version
+javac 21.0.7
 ```
 
 
 ### Instalar Jenkins
+
 https://www.jenkins.io/doc/book/installing/linux/
 
 ```
-sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
   https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
-echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
+echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
   https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
   /etc/apt/sources.list.d/jenkins.list > /dev/null
-sudo apt-get update
-sudo apt-get install jenkins
+sudo apt update
+sudo apt install jenkins
 
 ```
+Habilita el servicio jenkins para que arranque al iniciar la máquina:
 
 ```
 sudo systemctl enable jenkins
 Synchronizing state of jenkins.service with SysV service script with /lib/systemd/systemd-sysv-install.
 Executing: /lib/systemd/systemd-sysv-install enable jenkins
 ```
+
+Comprueba que el servicio esté ejecutándose:
 
 ```
 sudo systemctl status jenkins
@@ -90,33 +95,43 @@ be1f2b1a5f78b6efde5faf8be12e7f0948d4e
 - Credenciales
 - etc...
 
-## Crear Proyecto 1 (Tarea / Job) Freestyle
+
+## Proyecto 1 (Tarea / Job) Freestyle
+Aspectos básicos del funcionamiento de Jenkins
 
 - Crea un Projecto de estilo libre:
 Establece el nombre, pulsa sobre crear un projecto de estilo libre y OK.
 
 Accederemos a la pantalla de configuración del proyecto, con un montón de opciones, dependiendo de los plugins que tengamos instalados.
 
-Por ahora, pasaremos a la sección "Build Steps", pulsaremos sobre añadir un nuevo paso y seleccionamos Ejecutar linea de comandos (shell). En el cuadro de texto escribiremos el comando a ejecutar y pulsaremos sobre Guardar.
+Por ahora, pasaremos a la sección "Build Steps", pulsaremos sobre añadir un nuevo paso y seleccionamos Ejecutar linea de comandos (shell). 
+En el cuadro de texto escribiremos el comando a ejecutar y pulsaremos sobre Guardar.
 
 ```shell
 echo "Hola desde jenkins!"
 ```
 
-En la pantalla del proyecto, entre otras acciones, podemos ver su workspace (directorio de trabajo), ejecutarlo con "Construir ahora" o volver a configurarlo de nuevo en la opción "Configurar".
+En la pantalla del proyecto, entre otras acciones, podemos ver su workspace (directorio de trabajo), ejecutarlo con "Construir ahora" o volver a 
+configurarlo de nuevo en la opción "Configurar".
 
-Si ejecutamos el proyecto, veremos en la sección "Historia de tarea" una nueva entrada a la que podemos acceder  para comprobar su resultado, con la opción "Console Output".
+Si ejecutamos el proyecto, veremos en la sección "Historia de tarea" una nueva entrada a la que podemos acceder  para comprobar su resultado, 
+con la opción "Console Output".
 
 En el panel de control tendremos todos los proyectos organizados en Vistas y/o Carpetas.
 
-## Instalar Docker
+
+
+
+## Proyecto 2 (Tarea / Job) Freestyle
+
+### Instalar Docker
 
 Ahora instalaremos Docker en la máquina virtual:
 
 ```
 # Add Docker's official GPG key:
-sudo apt-get update
-sudo apt-get install ca-certificates curl
+sudo apt update
+sudo apt install ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
@@ -126,11 +141,11 @@ echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
+sudo apt update
 ```
 
 ```
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
 ```
@@ -183,7 +198,7 @@ Server: Docker Engine - Community
   GitCommit:        de40ad0
 ```
 
-## Contenerizar App
+### Contenerizar App
 
 Vamos a crear una aplicación, hola mundo, en Flask, y su fichero Dockerfile para contenerizarla. (La app y el fichero Dockerfile están disponibles en este repositorio).
 
@@ -200,20 +215,24 @@ docker run -d --name app -p 8080:8080 flask-app
 Vamos a crear un repositorio github para mantener el control de versiones de nuestra aplicación.
 
 
-## Crear Proyecto 2 Freestyle 
+### Crear Proyecto 2 Freestyle 
 
-Ahora, creamos un nuevo proyecto en Jenkins para que cada vez que subamos una nueva versión de la App a nuestro repositorio git remoto (Github), se ejecute la tarea, que creará la imagen y la subirá a Docker Hub.
+Ahora, creamos un nuevo proyecto en Jenkins para que cada vez que subamos una nueva versión de la App a nuestro repositorio git remoto (Github), 
+se ejecute la tarea, que creará la imagen y la subirá a Docker Hub.
 
-Primero, vamos a crear las crendenciales para DockerHub: Panel de control - Administrar Jenkins - Credentials - Global - Add Credential - Tipo: Username with Password - Inserta Username y Password, en ID pon un nombre a las credenciales.
+Primero, vamos a crear las crendenciales para DockerHub: 
+Panel de control - Administrar Jenkins - Credentials - Global - Add Credential - Tipo: Username with Password - Inserta Username y Password, 
+en ID pon un nombre a las credenciales.
 
 Ahora, volvemos al proyecto:
 
 - Accedemos al Proyecto y pulsamos en Configurar
 
-- En "Configurar el origen del código fuente": Marcamos Git y completamos los apartados: Repository URL y Branches to build. Si es un repositorio público no es necesario indicar credenciales.
+- En "Configurar el origen del código fuente": Marcamos Git y completamos los apartados: Repository URL y Branches to build. 
+  Si es un repositorio público no es necesario indicar credenciales.
 
 - En "Disparadores de ejecuciones": marcamos GitHub hook trigger for GITScm polling.
-NOTA: Es necesario añadir un WebHook al repositorio de Github con la URL http://<jenkins_server>/github-webhook/ para las acciones push.
+<b>NOTA</b>: Es necesario añadir un WebHook al repositorio de Github con la URL http://<jenkins_server>/github-webhook/ para las acciones push.
 
 - En "Entorno de ejecución" marca "Use secret text(s) or file(s)", pulsa en Añadir y selecciona "Username and password (separated)", en Username Variable introducimos: DOCKER_USERNAME, en Password Variable: DOCKER_PASSWORD y seleccionamos en Credentials las credenciales de Dockerhub creadas anteriormenete.
 NOTA: Requiere haber creado previamente las crendenciales para DockerHub.
@@ -222,17 +241,20 @@ NOTA: Requiere haber creado previamente las crendenciales para DockerHub.
 ```
 TAG=`date "+%d%m%Y-%H%M%S"`
 docker build -t jluisalvarez/flask-app:$TAG .
-docker images
+docker image tag jluisalvarez/flask-app:$TAG jluisalvarez/flask-app:latest
+docker image ls
 docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
 docker push jluisalvarez/flask-app:$TAG
-docker rmi jluisalvarez/flask-app:$TAG
+docker push jluisalvarez/flask-app:latest
+docker image rm jluisalvarez/flask-app:$TAG jluisalvarez/flask-app:latest
 ```
 - Finalmente, pulsamos en guardar.
 
-Ahora, cada vez que subamos una nueva versión a nuestro repositorio Github se ejecutará la tarea, creará una imagen y la súbirá a Docker Hub, etiquetada con la fecha y hora de creación. También, podemos iniciar la tarea manualmente.
+Ahora, cada vez que subamos una nueva versión a nuestro repositorio Github se ejecutará la tarea, creará una imagen y la súbirá a Docker Hub, etiquetada con la fecha y hora de creación, además subirá una versiçon latest.
+También, podemos iniciar la tarea manualmente.
 
 
-## Crear Proyecto 3 (Tarea / Job) Pipeline
+## Proyecto 3 (Tarea / Job) Pipeline Script
 
 - Crea un Tarea de Pipeline
 
@@ -298,6 +320,7 @@ pipeline {
                 sh '''
                 echo "Building..."
                 docker build -t jluisalvarez/flask_app:$TAG .
+                docker tag jluisalvarez/flask_app:$TAG jluisalvarez/flask_app:latest
                 '''
             }
         }
@@ -338,13 +361,89 @@ pipeline {
 
 Ejecuta la tarea y comrpueba que los resultados son los esperados.
 
-## Desplegando en Kubernetes
+
+## Proyecto 4: Pipeline from SCM (y Jenkinsfile) con AWS
+Vamos a crear una pipeline que permita desplegar en EKS, auqnue en este caso, solo probaremos la conexión.
+
+En la máquina donde esté instalado Jenkins, es necesario tener instalada las herramientas necesarias, en este caso: Docker, AWS CLI, kubectl.
+Además, debemos tener un cluster EKS.
+
+Entra en Jenkins y crea 3 Secret Text (access_key, secret_key y session_token) para guardar la configuración de acceso a AWS (aws_access_key_id, 
+aws_secret_access_key, aws_session_token, respectivamente).
+
+Crea un repositorio GitHub (aquí usaremos https://github.com/MII-CC-2025/devops_lab1).
+En el IDE que desees crea un fichero Jenkinsfile con el siguiente contenido:
+
+```
+pipeline {
+
+    agent any
+
+    stages {
+        stage("Clone Git Repository") {
+            steps {
+                git(
+                    url: "https://github.com/MII-CC-2025/devops_lab1",
+                    branch: "main",
+                    changelog: true,
+                    poll: true
+                )
+            }
+        }
+    
+        stage('Build') {
+            steps {
+                sh 'docker --version'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'java --version'
+           }
+        }
+        stage('Deploy') {
+            steps {
+                withCredentials([
+                        string(credentialsId: 'access_key', variable: 'ACCESS_KEY'),
+                        string(credentialsId: 'secret_key', variable: 'SECRET_KEY'),
+                        string(credentialsId: 'session_token', variable: 'ACCESS_TOKEN'),
+                    ]) {
+                        withEnv([
+                            "AWS_ACCESS_KEY_ID=${ACCESS_KEY}",
+                            "AWS_SECRET_ACCESS_KEY=${SECRET_KEY}",
+                            "AWS_SESSION_TOKEN=${ACCESS_TOKEN}",
+                            "KUBECONFIG=/var/lib/jenkins/.kube/config"
+                        ]) {
+                            sh "echo $AWS_ACCESS_KEY_ID"
+                            sh 'kubectl version'
+                        }
+                    }
+                }
+        }
+    }
+}
+
+```
+
+Crea una nueva tarea en Jenkins (Proyecto 4) de tipo pipeline cuya activación sea desde un repositorio 
+(recuerda que este repositorio debes configurar un WebHook a la url de jenkins),
+este debe estar configurado con el WebHook. 
+
+Selecciona "Pipeline Script fron SMC", selecciona Git, escribe la url del repositorio (si es público, no hacen falta credenciales,
+en otro caso necesitará crear un token de acceso y crear las credenciales), eligue la rama
+y, finalmente, la ruta al fichero Jenkinsfile.
+
+Ahora, cada vez que hagas un push a este repositorio, se notificará a Jenkins que active esta tarea, por lo que descargará el repositorio y
+ejecutará la pipeline del fichero Jenkinsfile.
+
+
+
+## Proyecto 5: Desplegando en Kubernetes GKE
 
 Ahora desplagaremos a Kubernetes incluyendo el código de la Pipeline, en el fichero Jenkinsfile, del repositorio.
 
-### GKE
 
-Necesitaremos las credenciales del cluster GKE y una cuenta de servicio.
+Necesitaremos tener un cluster GKE y debemos obtener sus credenciales; además, necesitaremos una cuenta de servicio con autorización para desplegar en el cluster.
 
 Las credenciales del cluster, podemos incluirlas en el fichero: /var/lib/jenkins/.kube/config de la máquina virtual con la instalación de Jenkins.
 
@@ -363,7 +462,18 @@ pipeline {
         TAG = sh (returnStdout: true, script: 'date "+%d%m%Y-%H%M%S"').trim()
     }
 
-    stages {        
+    stages {
+    
+        stage("Clone Git Repository") {
+            steps {
+                git(
+                    url: "https://github.com/MII-CC-2025/devops_lab1",
+                    branch: "main",
+                    changelog: true,
+                    poll: true
+                )
+            }
+        }    
         stage('Build') {
             steps {
                 sh '''
